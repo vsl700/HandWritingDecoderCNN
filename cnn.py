@@ -112,9 +112,6 @@ def begin(images, words):
     fashion_train = fashion_model.fit(train_X, train_label, batch_size=batch_size, epochs=epochs, verbose=1,
                                       validation_data=(valid_X, valid_label))
 
-    # Save the trained model
-    fashion_model.save(model_file)
-
     accuracy = fashion_train.history['accuracy']
     val_accuracy = fashion_train.history['val_accuracy']
     loss = fashion_train.history['loss']
@@ -131,6 +128,9 @@ def begin(images, words):
     plt.title('Training and validation loss')
     plt.legend()
     plt.show()
+
+    # Save the trained model
+    fashion_model.save(model_file)
 
     # Evaluate model
     test_eval = fashion_model.evaluate(test_X, test_Y_one_hot, verbose=1)
