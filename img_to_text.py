@@ -2,7 +2,7 @@ from PIL import Image, ImageFont
 
 
 def convert(text: str, font_filepath: str):
-    font_size = 36
+    font_size = 30
     # font_filepath = "fonts/sofiapro-light.otf"
     color = (255, 255, 255, 255)
 

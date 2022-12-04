@@ -53,13 +53,14 @@ from sklearn.metrics import classification_report
 # test_X = test_X / 255
 
 def begin(images, words):
-    size = len(images[0])
+    width = len(images[0][0])
+    height = len(images[0])
 
     train_X, test_X, train_Y, test_Y = train_test_split(images, words, test_size=0.2, random_state=13)
 
     # Data reshaping (preprocessing)
-    train_X = train_X.reshape(-1, size, size, 1)
-    test_X = test_X.reshape(-1, size, size, 1)
+    train_X = train_X.reshape(-1, height, width, 1)
+    test_X = test_X.reshape(-1, height, width, 1)
 
     # Convert to one-hot encoding vector (for categorizing by the network)
     train_Y_one_hot = to_categorical(train_Y)
@@ -78,7 +79,7 @@ def begin(images, words):
     batch_size = 64
     epochs = 40
     num_classes = len(train_Y_one_hot[0])
-    model_file = "models/handwriting1_model_dropout.h5py"
+    model_file = "models/handwriting2_model_dropout.h5py"
 
     try:
         fashion_model = load_model(model_file)
@@ -86,7 +87,7 @@ def begin(images, words):
     except IOError:
         fashion_model = Sequential()
         fashion_model.add(Conv2D(32, kernel_size=(3, 3), activation='linear',
-                                 input_shape=(size, size, 1), padding='same'))
+                                 input_shape=(height, width, 1), padding='same'))
         fashion_model.add(LeakyReLU(alpha=0.1))
         fashion_model.add(MaxPooling2D((2, 2), padding='same'))
         fashion_model.add(Dropout(0.25))
@@ -130,7 +131,7 @@ def begin(images, words):
     plt.show()
 
     # Save the trained model
-    fashion_model.save(model_file)
+    # fashion_model.save(model_file)
 
     # Evaluate model
     test_eval = fashion_model.evaluate(test_X, test_Y_one_hot, verbose=1)
@@ -147,7 +148,7 @@ def begin(images, words):
     # plt.figure()
     for i, correct in enumerate(correct[:9]):
         plt.subplot(3, 3, i + 1)
-        plt.imshow(test_X[correct].reshape(size, size), cmap='gray', interpolation='none')
+        plt.imshow(test_X[correct].reshape(height, width), cmap='gray', interpolation='none')
         plt.title("Predicted {}, Class {}".format(predicted_classes[correct], test_Y[correct]))
         plt.tight_layout()
 
@@ -156,7 +157,7 @@ def begin(images, words):
     plt.figure()
     for i, incorrect in enumerate(incorrect[:9]):
         plt.subplot(3, 3, i + 1)
-        plt.imshow(test_X[incorrect].reshape(size, size), cmap='gray', interpolation='none')
+        plt.imshow(test_X[incorrect].reshape(height, width), cmap='gray', interpolation='none')
         plt.title("Predicted {}, Class {}".format(predicted_classes[incorrect], test_Y[incorrect]))
         plt.tight_layout()
 
